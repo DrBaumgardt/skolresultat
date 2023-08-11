@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject }) => {
+const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
   const [chartData, setChartData] = useState([]);
   const [chartCategories, setChartCategories] = useState([]);
 
@@ -64,7 +64,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject }) => {
 
   const chartOptions = {
     title: {
-      text: `Genomsnittliga betygspoäng för nationella prov i ${selectedSubject} för ${selectedSkola}, ${selectedKommun}, under 2014-2022`,
+      text: `Genomsnittliga betygspoäng för NP i ${selectedSubjectName} för ${selectedSkola}, ${selectedKommun}, 2014-2022`,
       align: "left"
     },
     subtitle: {

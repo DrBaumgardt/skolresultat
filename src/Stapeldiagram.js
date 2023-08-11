@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject }) => {
+const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
   const [chartData, setChartData] = useState([]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
   const [availableYears, setAvailableYears] = useState([]);
@@ -99,7 +99,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject }) => {
       height: chartHeight
     },
     title: {
-      text: `Genomsnittliga betygspoäng för nationella prov i ${selectedSubject} för skolor i ${selectedKommun}, ${
+      text: `Genomsnittliga betygspoäng för NP i ${selectedSubjectName} för skolor i ${selectedKommun}, ${
         2000 + actualYear
       }`,
       align: "left"

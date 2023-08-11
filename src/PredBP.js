@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const PredBP = ({ selectedKommun, selectedSkola, selectedSubject }) => {
+const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
   const [chartData, setChartData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
@@ -61,12 +61,13 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject }) => {
             const xValue = school[`mo_bp_np_${selectedSubject}_${actualYear}`];
             const yValue = school[`bp_np_${selectedSubject}_${actualYear}`];
             const schoolName = school.skola;
+            const schoolCity = school.kom;        
         
             if (xValue !== null && !isNaN(xValue)) {
                 maxX = Math.max(maxX, xValue);
                 minX = Math.min(minX, xValue);
         
-                const pointData = { x: xValue, y: yValue, name: schoolName };
+                const pointData = { x: xValue, y: yValue, name: schoolName, city: schoolCity };
                 
                 if (school.skola === selectedSkola && yValue !== null && !isNaN(yValue)) {
                     selectedSchoolData.push(pointData);
@@ -127,7 +128,7 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject }) => {
         console.error("Error loading file:", error);
       });
     }
-  }, [selectedSubject, actualYear]);
+  }, [selectedSubject, actualYear, selectedSkola]);
 
   const handleSliderChange = (e) => {
     const yearSelected = Number(e.target.value);
@@ -143,9 +144,7 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject }) => {
       height: "600px",
     },
     title: {
-      text: `Predikterade mot faktiska betygspoäng för ${selectedSkola} i ${selectedSubject}, ${
-        actualYear || "Loading..."
-      }`,
+      text: `Predikterade mot faktiska betygspoäng för NP i ${selectedSubjectName} för ${selectedSkola}, ${2000 + actualYear || "Loading..."}`,
       align: "left",
     },
     xAxis: {
@@ -160,9 +159,9 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject }) => {
     },
     tooltip: {
       pointFormatter: function() {
-          return `<b>Skola:</b> ${this.name}<br><b>Predikterad betygspoäng:</b> ${this.x.toFixed(1)}<br><b>Faktisk betygspoäng:</b> ${this.y.toFixed(1)}`;
+        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad betygspoäng:</b> ${this.x.toFixed(1)}<br><b>Faktisk betygspoäng:</b> ${this.y.toFixed(1)}`;
       }
-  },  
+    },
     legend: {
       enabled: true,
     },

@@ -8,7 +8,9 @@ const Header = ({
   selectedCategory,
   setSelectedCategory,
   selectedSubject,
-  setSelectedSubject
+  setSelectedSubject,
+  selectedSubjectName,
+  setSelectedSubjectName,
 }) => {
   const [kommuner, setKommuner] = useState([]);
   const [skolor, setSkolor] = useState([]);
@@ -55,7 +57,8 @@ const Header = ({
 
   const handleSubjectChange = (e) => {
     setSelectedSubject(e.target.value);
-  };
+    setSelectedSubjectName(e.target.options[e.target.selectedIndex].text);
+  };  
 
   return (
     <div className="header-container">
