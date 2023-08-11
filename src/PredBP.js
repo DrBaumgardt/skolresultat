@@ -1,4 +1,4 @@
-// Hej! eeeeeeeeeeeeeeeeeeeeerrr111update?
+// Hej! eeeeeeeeeeeeeeeeeeeeerrr111update?22
 import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
