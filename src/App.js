@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Header from "./Header";
+import Linjediagram from "./Linjediagram";
+import Stapeldiagram from "./Stapeldiagram";
+import PredBP from "./PredBP";
+import Footer from "./Footer";
+import "./styles.css";
 
-function App() {
+export default function App() {
+  const [selectedKommun, setSelectedKommun] = useState("Linköping");
+  const [selectedSkola, setSelectedSkola] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("NP");
+  const [selectedSubject, setSelectedSubject] = useState("ma");
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header
+        selectedKommun={selectedKommun}
+        setSelectedKommun={setSelectedKommun}
+        selectedSkola={selectedSkola}
+        setSelectedSkola={setSelectedSkola}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedSubject={selectedSubject}
+        setSelectedSubject={setSelectedSubject}
+      />
+      <Linjediagram
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+      />
+      <Stapeldiagram
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+      />
+      <PredBP
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+      />
+      <Footer />
     </div>
   );
 }
-
-export default App;

@@ -1,17 +1,48 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import Highcharts from "highcharts";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+Highcharts.setOptions({
+  title: {
+    style: {
+      fontFamily: "Helvetica",
+      fontSize: "18px",
+      fontWeight: "bold"
+    }
+  },
+  subtitle: {
+    style: {
+      fontFamily: "Verdana",
+      fontSize: "12px"
+    }
+  }
+});
+
+Highcharts.setOptions({
+  responsive: {
+    rules: [
+      {
+        condition: {
+          maxWidth: 500
+        },
+        chartOptions: {
+          legend: {
+            layout: "horizontal",
+            align: "center",
+            verticalAlign: "bottom"
+          }
+        }
+      }
+    ]
+  }
+});
+
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <App />
-  </React.StrictMode>
+  </StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
