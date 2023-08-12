@@ -24,6 +24,8 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
   );
 
   useEffect(() => {
+    setChartData([]);
+    setChartCategories([]);
     if (selectedKommun && selectedSkola && selectedSubject) {
       fetch(`/assets/np_${selectedSubject}_reg.json`)
         .then((response) => response.json())
