@@ -92,6 +92,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
         label: {
           connectorAllowed: false
         },
+        lineWidth: 2,
         connectNulls: true // Connects lines even if data points are missing
       }
     },

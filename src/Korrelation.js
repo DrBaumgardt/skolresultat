@@ -152,7 +152,7 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="padding:0">{series.name}: </td>' +
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
                 '<td style="padding:0"><b>{point.actualValue:.2f}</b></td></tr>',  // Visar den faktiska koefficienten avrundad till hundradelar
             footerFormat: '</table>',
             shared: true,
@@ -185,7 +185,7 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
     return (
         <div className="chart-container">
             <div className="description-container">
-                <h2>Korrelation mellan betygspoäng och variabler för {selectedSkola}</h2>
+                <h2>Korrelation mellan betygspoäng och utvalda variabler</h2>
                 <p>
                     Diagrammet visar korrelationskoefficienten mellan betygspoäng och utvalda variabler för det valda året. Använd skjutreglaget under diagrammet för att byta år.
                 </p>

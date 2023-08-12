@@ -3,7 +3,10 @@ import Header from "./Header";
 import Linjediagram from "./Linjediagram";
 import Stapeldiagram from "./Stapeldiagram";
 import Korrelation from "./Korrelation";
+import Resultatochvariabler from "./Resultatochvariabler";
 import PredBP from "./PredBP";
+import LinjeResidualer from "./LinjeResidualer";
+import StapelResidualer from "./StapelResidualer";
 import Footer from "./Footer";
 import "./styles.css";
 
@@ -53,7 +56,25 @@ export default function App() {
         selectedSubject={selectedSubject}
         selectedSubjectName={selectedSubjectName}
       />
+      <Resultatochvariabler
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+        selectedSubjectName={selectedSubjectName}
+      />
       <PredBP
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+        selectedSubjectName={selectedSubjectName}
+      />
+      <LinjeResidualer
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+        selectedSubjectName={selectedSubjectName}
+      />
+      <StapelResidualer
         selectedKommun={selectedKommun}
         selectedSkola={selectedSkola}
         selectedSubject={selectedSubject}

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+require('highcharts/modules/exporting')(Highcharts);
 
 const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
   const [chartData, setChartData] = useState([]);
