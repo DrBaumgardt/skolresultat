@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Linjediagram from "./Linjediagram";
 import Stapeldiagram from "./Stapeldiagram";
+import Korrelation from "./Korrelation";
 import PredBP from "./PredBP";
 import Footer from "./Footer";
 import "./styles.css";
@@ -16,7 +17,7 @@ export default function App() {
   useEffect(() => {
     const initialSubjectName = document.querySelector(`option[value="${selectedSubject}"]`)?.textContent;
     if (initialSubjectName) {
-        setSelectedSubjectName(initialSubjectName);
+      setSelectedSubjectName(initialSubjectName);
     }
   }, []);
 
@@ -41,6 +42,12 @@ export default function App() {
         selectedSubjectName={selectedSubjectName}
       />
       <Stapeldiagram
+        selectedKommun={selectedKommun}
+        selectedSkola={selectedSkola}
+        selectedSubject={selectedSubject}
+        selectedSubjectName={selectedSubjectName}
+      />
+      <Korrelation
         selectedKommun={selectedKommun}
         selectedSkola={selectedSkola}
         selectedSubject={selectedSubject}

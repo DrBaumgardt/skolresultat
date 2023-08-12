@@ -106,7 +106,7 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
             marker: {
               radius: 5,
               symbol: 'circle',
-              fillColor: 'red',
+              fillColor: '#D93B48',
               turboThreshold: 0
             }
           },

@@ -70,7 +70,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
             .map((skola) => ({
               name: skola.skola,
               y: skola[`bp_np_${selectedSubject}_${actualYear}`] ?? null,
-              color: skola.skola === selectedSkola ? "#FF0000" : "#2CAFFE"
+              color: skola.skola === selectedSkola ? "#D93B48" : "#2CAFFE"
             }))
             .sort((a, b) => b.y - a.y)
             .map((item, index) => ({ ...item, id: `id_${index}` })); // Assign new id based on sorted order
