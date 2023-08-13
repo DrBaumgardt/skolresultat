@@ -2,15 +2,10 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
+const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
   const [chartData, setChartData] = useState([]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
   const [availableYears, setAvailableYears] = useState([]);
-  const [startYear, setStartYear] = useState(0);
-
-  useEffect(() => {
-    setStartYear(2022 - availableYears.length + 1);
-  }, [availableYears]);
 
   const handleSliderChange = (e) => {
     const yearSelected = Number(e.target.value);
@@ -35,7 +30,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
           const yearsWithData = Object.keys(skolaData)
             .filter(
               (key) =>
-                key.startsWith(`bp_np_${selectedSubject}_`) &&
+                key.startsWith(`${selectedMetric}_np_${selectedSubject}_`) &&
                 skolaData[key] != null
             )
             .map((key) => parseInt(key.split("_").pop(), 10))
@@ -48,7 +43,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
           console.error("Error loading file:", error);
         });
     }
-  }, [selectedKommun, selectedSkola, selectedSubject]);
+  }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric]);
 
   useEffect(() => {
     if (
@@ -63,13 +58,13 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
           const kommunData = data.filter(
             (item) =>
               item.kom === selectedKommun &&
-              item[`bp_np_${selectedSubject}_${actualYear}`] != null
+              item[`${selectedMetric}_np_${selectedSubject}_${actualYear}`] != null
           );
 
           const betygValues = kommunData
             .map((skola) => ({
               name: skola.skola,
-              y: skola[`bp_np_${selectedSubject}_${actualYear}`] ?? null,
+              y: skola[`${selectedMetric}_np_${selectedSubject}_${actualYear}`] ?? null,
               color: skola.skola === selectedSkola ? "#D93B48" : "#2CAFFE"
             }))
             .sort((a, b) => b.y - a.y)
@@ -87,7 +82,8 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
     selectedSubject,
     selectedYearIndex,
     availableYears,
-    actualYear
+    actualYear,
+    selectedMetric
   ]);
 
   const chartHeight =
@@ -99,7 +95,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
       height: chartHeight
     },
     title: {
-      text: `Genomsnittliga betygspoäng för NP i ${selectedSubjectName} för skolor i ${selectedKommun}, ${
+      text: `Genomsnittliga ${selectedMetricName} för NP i ${selectedSubjectName} för skolor i ${selectedKommun}, ${
         2000 + actualYear
       }`,
       align: "left"

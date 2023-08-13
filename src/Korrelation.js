@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { sampleCorrelation as correlation } from 'simple-statistics';
 
-const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
+const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedMetric }) => {
     const [chartData, setChartData] = useState([]);
     const [selectedYearIndex, setSelectedYearIndex] = useState(0);
     const [availableYears, setAvailableYears] = useState([]);
-    const variables = ['fgu', 'asb', 'ani', 'ap', 'n9'];
+    const variables = useMemo(() => ['fgu', 'asb', 'ani', 'ap', 'n9'], []);
 
-    const variableNamesLookup = {
+    const variableNamesLookup = useMemo(() => ({
         asb: "Andel elever med svensk bakgrund",
         n9: "Antal elever (år 9)",
         ap: "Andel pojkar",
         agu: "Andel elever med föräldrar med som mest gymnasial utbildning",
         ani: "Andel nyinvandrade elever",
         fgu: "Föräldrarnas genomsnittliga utbildningsnivå"
-    };
+    }), []);
 
     const handleSliderChange = (e) => {
         const yearSelected = Number(e.target.value);
@@ -42,19 +42,15 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
             fetch(`/assets/np_${selectedSubject}_reg.json`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log("Initial data fetched:", data);  // Log initial data
-
                     const skolaData = data.find(
                         (item) =>
                             item.kom === selectedKommun && item.skola === selectedSkola
                     );
 
-                    console.log("Selected school data:", skolaData);  // Log data for the selected school
-
                     const yearsWithData = Object.keys(skolaData)
                         .filter(
                             (key) =>
-                                key.startsWith(`bp_np_${selectedSubject}_`) &&
+                                key.startsWith(`${selectedMetric}_np_${selectedSubject}_`) &&
                                 skolaData[key] != null
                         )
                         .map((key) => parseInt(key.split("_").pop(), 10))
@@ -67,16 +63,16 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
                     console.error("Error loading file:", error);
                 });
         }
-    }, [selectedKommun, selectedSkola, selectedSubject]);
+    }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric]);
 
     useEffect(() => {
         if (selectedKommun && selectedSkola && selectedSubject && availableYears.length > 0) {
             fetch(`/assets/np_${selectedSubject}_reg.json`)
                 .then((response) => response.json())
                 .then((data) => {
-                    const referenceDataRaw = data.map(d => d[`bp_np_${selectedSubject}_${actualYear}`]);
+                    const referenceDataRaw = data.map(d => d[`${selectedMetric}_np_${selectedSubject}_${actualYear}`]);
 
-                    console.log("Reference data:", referenceDataRaw);  // Log reference data
+                    // console.log("Reference data:", referenceDataRaw);
 
                     const coefficients = variables.map(varName => {
                         const variableDataRaw = data.map(d => d[`${varName}_${actualYear}`]);
@@ -93,14 +89,14 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
                         const variableData = filteredData.map(d => d.var);
 
                         // Log filtered data for reference and the current variable
-                        console.log(`Filtered reference data for ${varName}_${actualYear}:`, referenceData);
-                        console.log(`Filtered variable data for ${varName}_${actualYear}:`, variableData);
+                        // console.log(`Filtered reference data for ${varName}_${actualYear}:`, referenceData);
+                        //console.log(`Filtered variable data for ${varName}_${actualYear}:`, variableData);
 
                         return correlation(referenceData, variableData);
                     });
 
 
-                    console.log("Correlation coefficients:", coefficients);  // Log correlation coefficients
+                    // console.log("Correlation coefficients:", coefficients);  // Log correlation coefficients
 
                     setChartData(coefficients.map((coeff, index) => ({
                         name: variableNamesLookup[variables[index]] || variables[index], 
@@ -122,7 +118,10 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
         selectedSubject,
         selectedYearIndex,
         availableYears,
-        actualYear
+        actualYear,
+        selectedMetric,
+        variableNamesLookup,
+        variables
     ]);
 
 
@@ -133,7 +132,7 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject }) => {
             type: "column",
         },
         title: {
-            text: `Korrelationskoefficient mellan betygspoäng och variabler för ${selectedSkola}, ${2000 + actualYear}`,
+            text: `Korrelationskoefficient mellan ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'} och variabler för ${selectedSkola}, ${2000 + actualYear}`,
             align: "left"
         },
         subtitle: {

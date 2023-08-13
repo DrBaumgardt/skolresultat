@@ -1,0 +1,93 @@
+.App {
+    font-family: Helvetica;
+    align-self: center;
+    flex: 1;
+    max-width: 1000px;
+    /*padding: 64px 16px 96px;*/
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .header-container {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .title-container {
+    /* Stil för hela header-containern om det behövs */
+  }
+  
+  .selection-container {
+    /* Stil för hela header-containern om det behövs */
+  }
+  
+  h1 {
+    font-size: 50px;
+  }
+  
+  h2 {
+  }
+  
+  p {
+  }
+  
+  .description-container {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .chart-container {
+    margin-top: 20px; /* Eller den önskade marginalen */
+    width: 100%; /* Tar upp hela bredden inom föräldern */
+    max-width: 1000px; /* Eller någon annan önskad maxbredd */
+    margin-bottom: 50px;
+  }
+  
+  .slider-container {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .slider-width {
+    width: 50%;
+  }
+  
+  .footer-spacer {
+    height: 100px; /* Ändra detta värde för att justera höjden */
+  }
+  
+  /* input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    cursor: pointer;
+    border-radius: 50%;
+  } */
+  
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #3333;
+  }
+  
+  /* input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #777;
+    cursor: pointer;
+    border-radius: 50%;
+    border-color: #ffffff;
+  } */
+  
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #3333;
+  }
+  

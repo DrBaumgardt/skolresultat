@@ -4,7 +4,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 require('highcharts/modules/exporting')(Highcharts);
 
-const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
+const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric }) => {
   const [chartData, setChartData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
@@ -12,37 +12,33 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
   useEffect(() => {
     if (selectedKommun && selectedSkola && selectedSubject) {
       fetch(`/assets/np_${selectedSubject}_reg.json`)
-      .then((response) => response.json())
+        .then((response) => response.json())
+        .then((data) => {
+          const skolaData = data.find(
+            (item) =>
+              item.kom === selectedKommun && item.skola === selectedSkola
+          );
 
-      .then((data) => {
-      
-        const skolaData = data.find(
-        (item) =>
-          item.kom === selectedKommun && item.skola === selectedSkola
-        );
+          const yearsWithData = Object.keys(skolaData)
+            .filter(
+              (key) =>
+                key.startsWith(`mo_${selectedMetric}_np_${selectedSubject}_`) &&
+                skolaData[key] != null &&
+                skolaData[`${selectedMetric}_np_${selectedSubject}_${key.split("_").pop()}`] !=
+                null
+            )
+            .map((key) => parseInt(key.split("_").pop(), 10))
+            .sort();
 
-        const yearsWithData = Object.keys(skolaData)
+          setAvailableYears(yearsWithData);
+          setSelectedYearIndex(yearsWithData.length - 1);
+        })
 
-        .filter(
-          (key) =>
-            key.startsWith(`mo_bp_np_${selectedSubject}_`) &&
-            skolaData[key] != null &&
-            skolaData[`bp_np_${selectedSubject}_${key.split("_").pop()}`] !=
-            null
-        )
-        
-        .map((key) => parseInt(key.split("_").pop(), 10))
-        .sort();
-
-        setAvailableYears(yearsWithData);
-        setSelectedYearIndex(yearsWithData.length - 1);
-      })
-
-      .catch((error) => {
-        console.error("Error loading file:", error);
-      });
+        .catch((error) => {
+          console.error("Error loading file:", error);
+        });
     }
-  }, [selectedKommun, selectedSkola, selectedSubject]);
+  }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric]);
 
   const actualYear = availableYears[selectedYearIndex] || null;
 
@@ -54,82 +50,82 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
           const otherSchoolsData = [];
           const selectedSchoolData = [];
           const sameKommunSchoolsData = [];
-
+  
           let maxX = -Infinity;
           let minX = Infinity;
-
+  
           data.forEach((school) => {
-            const xValue = school[`mo_bp_np_${selectedSubject}_${actualYear}`];
-            const yValue = school[`bp_np_${selectedSubject}_${actualYear}`];
+            const xValue = school[`mo_${selectedMetric}_np_${selectedSubject}_${actualYear}`];
+            const yValue = school[`${selectedMetric}_np_${selectedSubject}_${actualYear}`];
             const schoolName = school.skola;
-            const schoolCity = school.kom;        
-        
-            if (xValue !== null && !isNaN(xValue)) {
-                maxX = Math.max(maxX, xValue);
-                minX = Math.min(minX, xValue);
-        
-                const pointData = { x: xValue, y: yValue, name: schoolName, city: schoolCity };
-                
-                if (school.skola === selectedSkola && yValue !== null && !isNaN(yValue)) {
-                    selectedSchoolData.push(pointData);
-                } else if (school.kom === selectedKommun && yValue !== null && !isNaN(yValue)) {
-                    sameKommunSchoolsData.push(pointData);
-                } else if (yValue !== null && !isNaN(yValue)) {
-                    otherSchoolsData.push(pointData);
-                }
-            }
-        });                
+            const schoolCity = school.kom;
 
-        setChartData([
-          {
-          name: "Övriga skolor",
-          data: otherSchoolsData,
-          marker: {
-            radius: 2,
-            symbol: 'circle',
-            fillColor: '#CDCDCD'
-            },
-            turboThreshold: 0
-          },          
-          {
-            name: "Skolor i vald kommun",
-            data: sameKommunSchoolsData,
-            marker: {
-              radius: 4,
-              symbol: 'circle',
-              fillColor: '#2E9AFC'
-            },
-            turboThreshold: 0
-          },
-          {
-            name: "Vald Skola",
-            data: selectedSchoolData,
-            marker: {
-              radius: 5,
-              symbol: 'circle',
-              fillColor: '#D93B48',
-              turboThreshold: 0
+            if (xValue !== null && !isNaN(xValue)) {
+              maxX = Math.max(maxX, xValue);
+              minX = Math.min(minX, xValue);
+
+              const pointData = { x: xValue, y: yValue, name: schoolName, city: schoolCity };
+
+              if (school.skola === selectedSkola && yValue !== null && !isNaN(yValue)) {
+                selectedSchoolData.push(pointData);
+              } else if (school.kom === selectedKommun && yValue !== null && !isNaN(yValue)) {
+                sameKommunSchoolsData.push(pointData);
+              } else if (yValue !== null && !isNaN(yValue)) {
+                otherSchoolsData.push(pointData);
+              }
             }
-          },
-          {
-            name: "Regressionslinje",
-            type: "line",
-            data: [
-              [minX, minX],
-              [maxX, maxX],
-            ],
-            color: "#777777",
-            dashStyle: "dash",
-            lineWidth: 3,
-            marker: { enabled: false },
-          },
-        ]);
-      })
-      .catch((error) => {
-        console.error("Error loading file:", error);
-      });
+          });
+
+          setChartData([
+            {
+              name: "Övriga skolor",
+              data: otherSchoolsData,
+              marker: {
+                radius: 2,
+                symbol: 'circle',
+                fillColor: '#CDCDCD'
+              },
+              turboThreshold: 0
+            },
+            {
+              name: "Skolor i vald kommun",
+              data: sameKommunSchoolsData,
+              marker: {
+                radius: 4,
+                symbol: 'circle',
+                fillColor: '#2E9AFC'
+              },
+              turboThreshold: 0
+            },
+            {
+              name: "Vald Skola",
+              data: selectedSchoolData,
+              marker: {
+                radius: 5,
+                symbol: 'circle',
+                fillColor: '#D93B48',
+                turboThreshold: 0
+              }
+            },
+            {
+              name: "Regressionslinje",
+              type: "line",
+              data: [
+                [minX, minX],
+                [maxX, maxX],
+              ],
+              color: "#777777",
+              dashStyle: "dash",
+              lineWidth: 3,
+              marker: { enabled: false },
+            },
+          ]);
+        })
+        .catch((error) => {
+          console.error("Error loading file:", error);
+        });
     }
-  }, [selectedSubject, actualYear, selectedSkola]);
+  }, [selectedSubject, actualYear, selectedSkola, selectedKommun, selectedMetric]);
 
   const handleSliderChange = (e) => {
     const yearSelected = Number(e.target.value);
@@ -145,9 +141,9 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
       height: "600px",
     },
     title: {
-      text: `Predikterade mot faktiska betygspoäng för NP i ${selectedSubjectName} för ${selectedSkola}, ${2000 + actualYear || "Loading..."}`,
+      text: `Predikterade mot faktiska ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'} för NP i ${selectedSubjectName} för ${selectedSkola}, ${2000 + actualYear || "Loading..."}`,
       align: "left",
-    },
+  },
     xAxis: {
       title: {
         text: "Predikterade betygspoäng",
@@ -159,8 +155,8 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
       },
     },
     tooltip: {
-      pointFormatter: function() {
-        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad betygspoäng:</b> ${this.x.toFixed(1)}<br><b>Faktisk betygspoäng:</b> ${this.y.toFixed(1)}`;
+      pointFormatter: function () {
+        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'}:</b> ${this.x.toFixed(1)}<br><b>Faktisk ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'}:</b> ${this.y.toFixed(1)}${selectedMetric === 'bp' ? '' : ' %'}`;
       }
     },
     legend: {

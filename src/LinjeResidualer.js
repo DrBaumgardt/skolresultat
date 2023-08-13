@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
+const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
   const [chartData, setChartData] = useState([]);
   const [chartCategories, setChartCategories] = useState([]);
 
@@ -20,8 +20,8 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
           const categories = [];
 
           for (let year = 14; year <= 22; year++) {
-            const predValue = schoolData[`mo_bp_np_${selectedSubject}_${year}`];
-            const actualValue = schoolData[`bp_np_${selectedSubject}_${year}`];
+            const predValue = schoolData[`mo_${selectedMetric}_np_${selectedSubject}_${year}`];
+            const actualValue = schoolData[`${selectedMetric}_np_${selectedSubject}_${year}`];
 
             // Kontrollera om båda värdena är definierade innan residualen beräknas
             const residualValue = (predValue != null && actualValue != null) ? actualValue - predValue : null;
@@ -37,11 +37,11 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
           console.error("Error loading file:", error);
         });
     }
-  }, [selectedKommun, selectedSkola, selectedSubject]);
+  }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric]);
 
   const chartOptions = {
     title: {
-      text: `Residualer (Faktiska - Predikterade betygspoäng) för NP i ${selectedSubjectName} för ${selectedSkola}, 2014-2022`,
+      text: `Residualer (faktiska - predikterade ${selectedMetricName}) för NP i ${selectedSubjectName} för ${selectedSkola}, 2014-2022`,
       align: "left"
     },
     subtitle: {

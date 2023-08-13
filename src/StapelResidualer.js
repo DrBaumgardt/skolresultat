@@ -2,15 +2,10 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const StapelResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
+const StapelResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
     const [chartData, setChartData] = useState([]);
     const [selectedYearIndex, setSelectedYearIndex] = useState(0);
     const [availableYears, setAvailableYears] = useState([]);
-    const [startYear, setStartYear] = useState(0);
-
-    useEffect(() => {
-        setStartYear(2022 - availableYears.length + 1);
-    }, [availableYears]);
 
     const handleSliderChange = (e) => {
         const yearSelected = Number(e.target.value);
@@ -35,7 +30,7 @@ const StapelResidualer = ({ selectedKommun, selectedSkola, selectedSubject, sele
                     const yearsWithData = Object.keys(skolaData)
                         .filter(
                             (key) =>
-                                key.startsWith(`bp_np_${selectedSubject}_`) &&
+                                key.startsWith(`${selectedMetric}_np_${selectedSubject}_`) &&
                                 skolaData[key] != null
                         )
                         .map((key) => parseInt(key.split("_").pop(), 10))
@@ -48,116 +43,124 @@ const StapelResidualer = ({ selectedKommun, selectedSkola, selectedSubject, sele
                     console.error("Error loading file:", error);
                 });
         }
-    }, [selectedKommun, selectedSkola, selectedSubject]);
+    }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric]);
 
     useEffect(() => {
         if (
-          selectedKommun &&
-          selectedSkola &&
-          selectedSubject &&
-          availableYears.length > 0
+            selectedKommun &&
+            selectedSkola &&
+            selectedSubject &&
+            availableYears.length > 0
         ) {
-          fetch(`/assets/np_${selectedSubject}_reg.json`)
-            .then((response) => response.json())
-            .then((data) => {
-              const kommunData = data.filter(
-                (item) =>
-                  item.kom === selectedKommun &&
-                  item[`bp_np_${selectedSubject}_${actualYear}`] != null &&
-                  item[`mo_bp_np_${selectedSubject}_${actualYear}`] != null
-              );
-    
-              const residuals = kommunData.map((skola) => {
-                const actualValue = skola[`bp_np_${selectedSubject}_${actualYear}`];
-                const predictedValue = skola[`mo_bp_np_${selectedSubject}_${actualYear}`];
-                const residual = actualValue - predictedValue;
-                return {
-                  name: skola.skola,
-                  y: residual ?? null,
-                  color: skola.skola === selectedSkola ? "#D93B48" : "#2CAFFE"
-                };
-              });
-    
-              // Filtrera bort skolor med en residual på 3 eller mer
-              const filteredResiduals = residuals.filter(item => Math.abs(item.y) < 3);
-    
-              setChartData(
-                filteredResiduals.sort((a, b) => b.y - a.y)
-                  .map((item, index) => ({ ...item, id: `id_${index}` }))
-              );
-            })
-            .catch((error) => {
-              console.error("Error loading file:", error);
-            });
+            fetch(`/assets/np_${selectedSubject}_reg.json`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const kommunData = data.filter(
+                        (item) =>
+                            item.kom === selectedKommun &&
+                            item[`${selectedMetric}_np_${selectedSubject}_${actualYear}`] != null &&
+                            item[`mo_${selectedMetric}_np_${selectedSubject}_${actualYear}`] != null
+                    );
+
+                    const residuals = kommunData.map((skola) => {
+                        const actualValue = skola[`${selectedMetric}_np_${selectedSubject}_${actualYear}`];
+                        const predictedValue = skola[`mo_${selectedMetric}_np_${selectedSubject}_${actualYear}`];
+                        const residual = actualValue - predictedValue;
+                        return {
+                            name: skola.skola,
+                            y: residual ?? null,
+                            color: skola.skola === selectedSkola ? "#D93B48" : "#2CAFFE"
+                        };
+                    });
+
+                    let filteredResiduals;
+                    if (selectedMetric === 'bp') {
+                        filteredResiduals = residuals.filter(item => Math.abs(item.y) < 3);
+                    } else if (selectedMetric === 'ag') {
+                        filteredResiduals = residuals.filter(item => {
+                            const skolaActualValue = item[`${selectedMetric}_np_${selectedSubject}_${actualYear}`];
+                            return (item.y !== 100) && (Math.abs(item.y) < 30) && (skolaActualValue !== 100);
+                        });
+                    }
+
+                    setChartData(
+                        filteredResiduals.sort((a, b) => b.y - a.y)
+                            .map((item, index) => ({ ...item, id: `id_${index}` }))
+                    );
+                })
+                .catch((error) => {
+                    console.error("Error loading file:", error);
+                });
         }
-      }, [
+    }, [
         selectedKommun,
         selectedSkola,
         selectedSubject,
         selectedYearIndex,
         availableYears,
-        actualYear
-      ]);
-    
+        actualYear,
+        selectedMetric
+    ]);
+
 
 
     const chartHeight =
         chartData.length < 4 ? "200px" : chartData.length < 10 ? "300px" : "500px";
 
-        const chartOptions = {
-            chart: {
-                type: "column",
-                height: chartHeight
-            },
+    const chartOptions = {
+        chart: {
+            type: "column",
+            height: chartHeight
+        },
+        title: {
+            text: `Residualer (faktiska - predikterade ${selectedMetricName}) för NP i ${selectedSubjectName} för skolor i ${selectedKommun}, ${2000 + actualYear}`,
+            align: "left"
+        },
+        subtitle: {
+            text: "Källa: Skolverket",
+            align: "left"
+        },
+        xAxis: {
+            type: "category",
+            labels: {
+                enabled: false // Dölj etiketterna på x-axeln
+            }
+        },
+        yAxis: {
             title: {
-                text: `Residualer (Faktiska - Predikterade betygspoäng) för NP i ${selectedSubjectName} för skolor i ${selectedKommun}, ${2000 + actualYear}`,
-                align: "left"
-            },
-            subtitle: {
-                text: "Källa: Skolverket",
-                align: "left"
-            },
-            xAxis: {
-                type: "category",
-                labels: {
-                    enabled: false // Dölj etiketterna på x-axeln
+                text: ""
+            }
+        },
+        legend: {
+            enabled: false,
+            align: "left",
+            verticalAlign: "top"
+        },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,  // Aktiverar etiketterna
+                    format: '{y:.1f}',  // Formaterar etiketterna till en tiondel
+                    color: '#333'  // Färg på textetiketten
                 }
-            },
-            yAxis: {
-                title: {
-                    text: ""
-                }
-            },
-            legend: {
-                enabled: false,
-                align: "left",
-                verticalAlign: "top"
-            },
-            plotOptions: {
-                column: {
-                    dataLabels: {
-                        enabled: true,  // Aktiverar etiketterna
-                        format: '{y:.1f}',  // Formaterar etiketterna till en tiondel
-                        color: '#333'  // Färg på textetiketten
-                    }
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            series: [
-                {
-                    name: "Betygspoäng",
-                    data: chartData
-                }
-            ]
-        };
-        
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        series: [
+            {
+                name: "Betygspoäng",
+                data: chartData
+            }
+        ]
+    };
+
 
     return (
         <div className="chart-container">

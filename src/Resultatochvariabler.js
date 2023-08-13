@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }) => {
+const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, selectedMetric }) => {
+
     const [chartData, setChartData] = useState({
         betygspoäng: [],
         föräldrarnasUtbildning: [],
@@ -40,7 +41,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }
         if (skolaData) {
             const yearsWithData = Object.keys(skolaData)
                 .filter(key =>
-                    key.startsWith(`bp_np_${selectedSubject}_`) &&
+                    key.startsWith(`${selectedMetric}_np_${selectedSubject}_`) &&
                     !key.includes("_f_") &&
                     !key.includes("_p_") &&
                     skolaData[key] != null
@@ -48,7 +49,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }
                 .map(key => parseInt(key.split("_").pop(), 10))
                 .sort();
 
-            const betygspoäng = yearsWithData.map(year => skolaData[`bp_np_${selectedSubject}_${year}`]);
+            const betygspoäng = yearsWithData.map(year => skolaData[`${selectedMetric}_np_${selectedSubject}_${year}`]);
             const föräldrarnasUtbildning = yearsWithData.map(year => skolaData[`fgu_${year}`]);
             const andelSvenskBakgrund = yearsWithData.map(year => skolaData[`asb_${year}`]);
 
@@ -59,7 +60,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }
             });
             setAvailableYears(yearsWithData);
         }
-    }, [skolaData, selectedSubject]);
+    }, [skolaData, selectedSubject, selectedMetric]);
 
     const selectedVariableData = skolaData ? availableYears.map(year => skolaData[`${selectedVariable}_${year}`]) : [];
 
@@ -96,7 +97,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }
             zoomType: 'xy'
         },
         title: {
-            text: `Resultat och variabler för ${selectedSkola} i ämnet ${selectedSubject}`,
+            text: `${selectedMetric === 'bp' ? 'Betygspoäng' : 'Andel godkända'} och variabler för ${selectedSkola} i ämnet ${selectedSubject}`,
             align: 'left'
         },
         xAxis: [{
@@ -120,11 +121,15 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }
         }],
         series: [
             {
-                name: 'Betygspoäng',
+                name: selectedMetric === 'bp' ? 'Betygspoäng' : 'Andel godkända',
                 type: 'column',
                 data: chartData.betygspoäng,
                 tooltip: {
-                    valueSuffix: ' poäng'
+                    pointFormatter: function() {
+                        const value = selectedMetric === 'bp' ? this.y : Math.round(this.y);
+                        const suffix = selectedMetric === 'bp' ? ' poäng' : ' %';
+                        return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${value}${suffix}</b><br/>`;
+                    }
                 }
             },
             {
@@ -159,7 +164,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject }
                     <option value={key} key={key}>{variableOptions[key]}</option>
                 ))}
             </select>
-<p></p>
+            <p></p>
             <HighchartsReact highcharts={Highcharts} options={chartOptions} />
 
         </div>

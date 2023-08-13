@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName }) => {
+const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
   const [chartData, setChartData] = useState([]);
   const [chartCategories, setChartCategories] = useState([]);
 
@@ -13,14 +13,14 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
         : data;
 
       const validValues = filteredData
-        .map((item) => item[`bp_np_${selectedSubject}_${year}`])
+        .map((item) => item[`${selectedMetric}_np_${selectedSubject}_${year}`])
         .filter((value) => value != null);
       const totalValue = validValues.reduce((sum, value) => sum + value, 0);
       const averageValue = totalValue / validValues.length;
 
       return Number(averageValue.toFixed(1)); // Avrundar till en decimal
     },
-    [selectedSubject]
+    [selectedSubject, selectedMetric]
   );
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
           const categories = [];
 
           for (let year = 14; year <= 22; year++) {
-            const skolaNPValue = schoolData[`bp_np_${selectedSubject}_${year}`];
+            const skolaNPValue = schoolData[`${selectedMetric}_np_${selectedSubject}_${year}`];
             const kommunNPValue = getAverageNPValue(data, selectedKommun, year);
             const swedenNPValue = getAverageNPValue(data, null, year);
 
@@ -62,11 +62,11 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
           console.error("Error loading file:", error);
         });
     }
-  }, [selectedKommun, selectedSkola, selectedSubject, getAverageNPValue]);
+  }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric, getAverageNPValue]);
 
   const chartOptions = {
     title: {
-      text: `Genomsnittliga betygspoäng för NP i ${selectedSubjectName} för ${selectedSkola}, ${selectedKommun}, 2014-2022`,
+      text: `Genomsnittligt ${selectedMetricName} för NP i ${selectedSubjectName} för ${selectedSkola}, ${selectedKommun}, 2014-2022`,
       align: "left"
     },
     subtitle: {
@@ -75,7 +75,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
     },
     yAxis: {
       title: {
-        text: "Genomsnittliga betygspoäng"
+        text: `Genomsnittliga ${selectedMetricName}`
       }
     },
     xAxis: {
@@ -104,12 +104,12 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
   return (
     <div className="chart-container">
       <div className="description-container">
-        <h2>Genomsnittliga betygspoäng över tid</h2>
+        <h2>Genomsnittliga ${selectedMetricName} över tid</h2>
         <p>
-          Diagrammet visar det genomsnittliga betygspoänget för den valda skolan
-          över tid. För jämförelse visas även det genomsnittliga betygspoänget
+          Diagrammet visar det genomsnittliga ${selectedMetricName} för den valda skolan
+          över tid. För jämförelse visas även det genomsnittliga ${selectedMetricName}
           för alla skolor i den valda kommunen, samt det genomsnittliga
-          betygspoänget för skolor i hela Sverige under samma tidsperiod. Notera
+          ${selectedMetricName} för skolor i hela Sverige under samma tidsperiod. Notera
           att eventuella tomma punkter i diagrammet för den valda skolan
           indikerar år då data saknas.
         </p>
@@ -117,7 +117,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
       <HighchartsReact
         highcharts={Highcharts}
         options={chartOptions}
-        key={`${selectedSkola}-${selectedKommun}-${selectedSubject}`}
+        key={`${selectedSkola}-${selectedKommun}-${selectedSubject}-${selectedMetric}`}
       />
     </div>
   );
