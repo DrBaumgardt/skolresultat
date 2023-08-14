@@ -34,11 +34,17 @@
 }
 
 .logo-container {
-  /* flex: 1; */
-  color: white;                    /* Ändra textfärgen till vit */
-  margin-right: 100px;              /* Lägg till 50px mellanrum till nästa element */
-  font-family: Arial, sans-serif;  /* Använd Arial som typsnitt, med en generisk sans-serif som backup */
-  font-weight: bold;               /* Gör texten fet */
+  color: white;
+  margin-right: 50px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.logo-container img {
+  height: 40px;  /* eller vilken höjd du vill ha */
+  width: auto;    /* detta bibehåller bildens proportioner */
+  vertical-align: middle;
 }
 
 .selection-container {

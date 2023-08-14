@@ -79,7 +79,7 @@ const Header = ({
     <div className="header-container">
 
       <div className="logo-container">
-        <h1>skolresultat</h1>
+        <img src="/logo2.png" alt="Logo" />
       </div>
 
       <div className="selection-container">
