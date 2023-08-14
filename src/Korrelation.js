@@ -3,7 +3,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { sampleCorrelation as correlation } from 'simple-statistics';
 
-const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedMetric }) => {
+const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedMetric, selectedMetricName }) => {
     const [chartData, setChartData] = useState([]);
     const [selectedYearIndex, setSelectedYearIndex] = useState(0);
     const [availableYears, setAvailableYears] = useState([]);
@@ -33,7 +33,7 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedM
         if (absValue > 0.3) return "Svag";
         if (absValue > 0.1) return "Mycket svag";
         return "Ingen";
-    };    
+    };
 
     const actualYear = availableYears[selectedYearIndex];
 
@@ -99,13 +99,13 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedM
                     // console.log("Correlation coefficients:", coefficients);  // Log correlation coefficients
 
                     setChartData(coefficients.map((coeff, index) => ({
-                        name: variableNamesLookup[variables[index]] || variables[index], 
+                        name: variableNamesLookup[variables[index]] || variables[index],
                         y: Math.abs(coeff),  // Absolutbeloppet av koefficienten för att visa det som positivt i diagrammet
                         actualValue: coeff,  // Den faktiska koefficienten (kan vara negativ)
                         color: coeff < 0 ? '#D93B48' : '#2E9AFC'
                     })).sort((a, b) => b.y - a.y));
-                    
-                                      
+
+
 
                 })
                 .catch((error) => {
@@ -124,15 +124,12 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedM
         variables
     ]);
 
-
-
-
     const chartOptions = {
         chart: {
             type: "column",
         },
         title: {
-            text: `Korrelationskoefficient mellan ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'} och variabler för ${selectedSkola}, ${2000 + actualYear}`,
+            text: `Korrelationskoefficient mellan ${selectedMetricName.toLowerCase()} och utvalda variabler för ${selectedSkola}, ${2000 + actualYear}`,
             align: "left"
         },
         subtitle: {
@@ -173,7 +170,7 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedM
                     crop: false,
                     overflow: 'none',  // to ensure the label is displayed fully
                     y: -2,  // position the label a bit above the column
-                    formatter: function() {
+                    formatter: function () {
                         return getCorrelationStrength(this.y);
                     }
                 }
@@ -184,9 +181,9 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedM
     return (
         <div className="chart-container">
             <div className="description-container">
-                <h2>Korrelation mellan betygspoäng och utvalda variabler</h2>
+                <h2>Korrelation mellan {selectedMetricName.toLowerCase()} och utvalda variabler</h2>
                 <p>
-                    Diagrammet visar korrelationskoefficienten mellan betygspoäng och utvalda variabler för det valda året. Använd skjutreglaget under diagrammet för att byta år.
+                    Diagrammet visar korrelationskoefficienten mellan {selectedMetricName.toLowerCase()} och utvalda variabler för det valda året. Använd skjutreglaget under diagrammet för att byta år.
                 </p>
             </div>
             <HighchartsReact highcharts={Highcharts} options={chartOptions} />
