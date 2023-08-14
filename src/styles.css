@@ -25,18 +25,22 @@
   justify-content: center;         /* Centrera innehållet i header-container */
   width: 100%;
   text-align: left;
-  background-color: #D93B48;
+  background-color: #E63A44;
   position: sticky;
   top: 0;
   z-index: 1000;
   padding: 20px;
+  vertical-align: middle;
 }
 
 .logo-container {
   /* flex: 1; */
   color: white;                    /* Ändra textfärgen till vit */
-  margin-right: 50px;             /* Lägg till 100px mellanrum till nästa element */
+  margin-right: 100px;              /* Lägg till 50px mellanrum till nästa element */
+  font-family: Arial, sans-serif;  /* Använd Arial som typsnitt, med en generisk sans-serif som backup */
+  font-weight: bold;               /* Gör texten fet */
 }
+
 
 .selection-container {
   display: flex;
@@ -57,11 +61,16 @@ p {
   margin-top: 30px;
   margin-bottom: 30px;
 }
+
+.diagram-selector {
+  margin-bottom: 10px;
+}
+
 .chart-container {
   margin-top: 20px; /* Eller den önskade marginalen */
   width: 100%; /* Tar upp hela bredden inom föräldern */
   max-width: 1000px; /* Eller någon annan önskad maxbredd */
-  margin-bottom: 50px;
+  margin-bottom: 70px;
 }
 
 .slider-container {

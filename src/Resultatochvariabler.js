@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, selectedMetric }) => {
+const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
 
     const [chartData, setChartData] = useState({
         betygspoäng: [],
@@ -97,7 +97,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
             zoomType: 'xy'
         },
         title: {
-            text: `${selectedMetric === 'bp' ? 'Betygspoäng' : 'Andel godkända'} och variabler för ${selectedSkola} i ämnet ${selectedSubject}`,
+            text: `${selectedMetricName} i ${selectedSubjectName.toLowerCase()} jämfört med värden för vald variabel, ${selectedSkola}, 2014-2022`,
             align: 'left'
         },
         xAxis: [{
@@ -106,7 +106,7 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
         }],
         yAxis: [{
             title: {
-                text: 'Betygspoäng'
+                text: `${selectedMetricName}`
             }
         }, {
             title: {
@@ -117,7 +117,10 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
             },
             min: yAxisMin,
             max: yAxisMax,
-            opposite: true
+            opposite: true,
+            labels: {
+                format: `{value}${getTooltipSuffix(selectedVariable)}`
+            }
         }],
         series: [
             {
@@ -153,18 +156,18 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
         <div className="chart-container">
 
             <div className="description-container">
-                <h2>Betygspoäng jämfört med värdet på utvalda variabler för {selectedSkola}</h2>
+                <h2>{selectedMetricName} jämfört med värdet på utvalda variabler för {selectedSkola}</h2>
                 <p>
-                    Diagrammet visar skolans betygspoäng tillsammans med värdena på utvalda variabler. Använd rullgardinsmenyn ovanför diagrammet för att byta variabel.
+                    Diagrammet visar skolans {selectedMetricName.toLowerCase()} tillsammans med värdena på utvalda variabler. Använd rullgardinsmenyn ovanför diagrammet för att byta variabel.
                 </p>
             </div>
-
+            <div className="diagram-selector">
             <select value={selectedVariable} onChange={(e) => setSelectedVariable(e.target.value)}>
                 {Object.keys(variableOptions).map(key => (
                     <option value={key} key={key}>{variableOptions[key]}</option>
                 ))}
             </select>
-            <p></p>
+            </div>
             <HighchartsReact highcharts={Highcharts} options={chartOptions} />
 
         </div>

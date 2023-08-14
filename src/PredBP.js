@@ -4,7 +4,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 require('highcharts/modules/exporting')(Highcharts);
 
-const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric }) => {
+const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
   const [chartData, setChartData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
@@ -141,22 +141,22 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
       height: "600px",
     },
     title: {
-      text: `Predikterade mot faktiska ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'} för NP i ${selectedSubjectName} för ${selectedSkola}, ${2000 + actualYear || "Loading..."}`,
+      text: `Predikterad mot faktisk ${selectedMetricName.toLowerCase()} för NP i ${selectedSubjectName.toLowerCase()}, ${selectedSkola}, ${2000 + actualYear || "Loading..."}`,
       align: "left",
   },
     xAxis: {
       title: {
-        text: "Predikterade betygspoäng",
+        text: `Predikterad genomsnittlig ${selectedMetricName.toLowerCase()}`,
       },
     },
     yAxis: {
       title: {
-        text: "Faktiska betygspoäng",
+        text: `Faktisk genomsnittlig ${selectedMetricName.toLowerCase()}`,
       },
     },
     tooltip: {
       pointFormatter: function () {
-        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'}:</b> ${this.x.toFixed(1)}<br><b>Faktisk ${selectedMetric === 'bp' ? 'betygspoäng' : 'andel godkända'}:</b> ${this.y.toFixed(1)}${selectedMetric === 'bp' ? '' : ' %'}`;
+        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad ${selectedMetricName.toLowerCase()}:</b> ${this.x.toFixed(1)}<br><b>Faktisk ${selectedMetricName.toLowerCase()}:</b> ${this.y.toFixed(1)}${selectedMetric === 'bp' ? '' : ' %'}`;
       }
     },
     legend: {
@@ -168,10 +168,10 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
   return (
     <div className="chart-container">
       <div className="description-container">
-        <h2>Predikterade vs Faktiska betygspoäng för {selectedSkola}</h2>
+        <h2>Predikterade mot faktiska {selectedMetricName.toLowerCase()} för {selectedSkola}</h2>
         <p>
-          Diagrammet visar skolans predikterade betygspoäng på x-axeln och
-          skolans faktiska betygspoäng på y-axeln för det valda året. Använd
+          Diagrammet visar skolans predikterade {selectedMetricName.toLowerCase()} på x-axeln och
+          skolans faktiska {selectedMetricName.toLowerCase()} på y-axeln. Använd
           skjutreglaget under diagrammet för att byta år.
         </p>
       </div>

@@ -66,7 +66,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
 
   const chartOptions = {
     title: {
-      text: `Genomsnittligt ${selectedMetricName} för NP i ${selectedSubjectName} för ${selectedSkola}, ${selectedKommun}, 2014-2022`,
+      text: `Genomsnittlig ${selectedMetricName.toLowerCase()} för NP i ${selectedSubjectName.toLowerCase()} för ${selectedSkola}, ${selectedKommun}, 2014-2022`,
       align: "left"
     },
     subtitle: {
@@ -75,7 +75,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
     },
     yAxis: {
       title: {
-        text: `Genomsnittliga ${selectedMetricName}`
+        text: `Genomsnittlig ${selectedMetricName.toLowerCase()}`
       }
     },
     xAxis: {
@@ -104,13 +104,12 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
   return (
     <div className="chart-container">
       <div className="description-container">
-        <h2>Genomsnittliga ${selectedMetricName} över tid</h2>
+        <h2>Genomsnittlig {selectedMetricName.toLowerCase()} över tid</h2>
         <p>
-          Diagrammet visar det genomsnittliga ${selectedMetricName} för den valda skolan
-          över tid. För jämförelse visas även det genomsnittliga ${selectedMetricName}
-          för alla skolor i den valda kommunen, samt det genomsnittliga
-          ${selectedMetricName} för skolor i hela Sverige under samma tidsperiod. Notera
-          att eventuella tomma punkter i diagrammet för den valda skolan
+          Diagrammet visar genomsnittlig {selectedMetricName.toLowerCase()} för den valda skolan
+          över tid. För jämförelse visas även det genomsnittlig {selectedMetricName.toLowerCase()}
+          för alla skolor i den valda kommunen, samt genomsnittlig {selectedMetricName.toLowerCase()}
+          för skolor i hela Sverige under samma tidsperiod. Notera att eventuella tomma punkter i diagrammet för den valda skolan
           indikerar år då data saknas.
         </p>
       </div>

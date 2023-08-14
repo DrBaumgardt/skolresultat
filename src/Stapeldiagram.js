@@ -95,7 +95,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
       height: chartHeight
     },
     title: {
-      text: `Genomsnittliga ${selectedMetricName} för NP i ${selectedSubjectName} för skolor i ${selectedKommun}, ${
+      text: `Genomsnittlig ${selectedMetricName.toLowerCase()} för NP i ${selectedSubjectName.toLowerCase()} för skolor i ${selectedKommun}, ${
         2000 + actualYear
       }`,
       align: "left"
@@ -128,13 +128,10 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
   return (
     <div className="chart-container">
       <div className="description-container">
-        <h2>Betygspoäng för skolor i vald kommun</h2>
+        <h2>{selectedMetricName} för skolor i vald kommun</h2>
         <p>
-          Diagrammet visar genomsnittliga betygspoäng för alla skolor i den
-          valda kommunen som har ett inrapporterat värde under ett specifikt år.
-          Använd skjutreglaget under diagrammet för att byta år och se hur
-          betygspoängen för skolorna har förändrats. Den skola du valt är
-          markerad i rött.
+          Diagrammet visar genomsnittlig {selectedMetricName.toLowerCase()} för alla skolor i {selectedKommun} som har ett inrapporterat värde under ett specifikt år.
+          Använd skjutreglaget under diagrammet för att byta år. Den skola du valt är markerad i rött.
         </p>
       </div>
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />

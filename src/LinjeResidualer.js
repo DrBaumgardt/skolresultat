@@ -41,7 +41,7 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
 
   const chartOptions = {
     title: {
-      text: `Residualer (faktiska - predikterade ${selectedMetricName}) för NP i ${selectedSubjectName} för ${selectedSkola}, 2014-2022`,
+      text: `Residualer (faktisk - predikterad ${selectedMetricName.toLowerCase()}) för NP i ${selectedSubjectName.toLowerCase()}, ${selectedSkola}, 2014-2022`,
       align: "left"
     },
     subtitle: {
@@ -102,7 +102,7 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
       <div className="description-container">
         <h2>Residualer över tid</h2>
         <p>
-          Diagrammet visar residualerna (differensen mellan faktiska och predikterade betygspoäng) för den valda skolan över tid. Notera att eventuella tomma punkter i diagrammet för den valda skolan indikerar år då data saknas.
+          Diagrammet visar residualerna (differensen mellan faktisk och predikterad betygspoäng) för den valda skolan över tid. Notera att eventuella tomma punkter i diagrammet för den valda skolan indikerar år då data saknas.
         </p>
       </div>
       <HighchartsReact
