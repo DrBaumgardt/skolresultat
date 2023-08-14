@@ -50,10 +50,10 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
           const otherSchoolsData = [];
           const selectedSchoolData = [];
           const sameKommunSchoolsData = [];
-  
+
           let maxX = -Infinity;
           let minX = Infinity;
-  
+
           data.forEach((school) => {
             const xValue = school[`mo_${selectedMetric}_np_${selectedSubject}_${actualYear}`];
             const yValue = school[`${selectedMetric}_np_${selectedSubject}_${actualYear}`];
@@ -143,7 +143,11 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
     title: {
       text: `Predikterad mot faktisk ${selectedMetricName.toLowerCase()} för NP i ${selectedSubjectName.toLowerCase()}, ${selectedSkola}, ${2000 + actualYear || "Loading..."}`,
       align: "left",
-  },
+    },
+    subtitle: {
+      text: "Källa: Magnus Baumgardt",
+      align: "left"
+    },
     xAxis: {
       title: {
         text: `Predikterad genomsnittlig ${selectedMetricName.toLowerCase()}`,
@@ -156,7 +160,21 @@ const PredBP = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjec
     },
     tooltip: {
       pointFormatter: function () {
-        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad ${selectedMetricName.toLowerCase()}:</b> ${this.x.toFixed(1)}<br><b>Faktisk ${selectedMetricName.toLowerCase()}:</b> ${this.y.toFixed(1)}${selectedMetric === 'bp' ? '' : ' %'}`;
+        let xValue = this.x;
+        let yValue = this.y;
+        let suffix = "";
+
+        if (selectedMetric === 'ag') {
+          xValue = Math.round(this.x);
+          yValue = Math.round(this.y);
+          suffix = " %";
+        } else if (selectedMetric === 'bp') {
+          xValue = xValue.toFixed(1);
+          yValue = yValue.toFixed(1);
+          suffix = "";
+        }
+
+        return `<b>Skola:</b> ${this.name} (${this.city})<br><b>Predikterad ${selectedMetricName.toLowerCase()}:</b> ${xValue}${suffix}<br><b>Faktisk ${selectedMetricName.toLowerCase()}:</b> ${yValue}${suffix}`;
       }
     },
     legend: {

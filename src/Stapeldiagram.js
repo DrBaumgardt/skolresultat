@@ -95,7 +95,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
       height: chartHeight
     },
     title: {
-      text: `Genomsnittlig ${selectedMetricName.toLowerCase()} för NP i ${selectedSubjectName.toLowerCase()} för skolor i ${selectedKommun}, ${
+      text: `${selectedMetricName} för NP i ${selectedSubjectName.toLowerCase()} för skolor i ${selectedKommun}, ${
         2000 + actualYear
       }`,
       align: "left"
@@ -119,8 +119,24 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
     },
     series: [
       {
-        name: "Betygspoäng",
-        data: chartData
+        name: selectedMetric === 'bp' ? 'Betygspoäng' : 'Andel godkända',
+        data: chartData,
+        tooltip: {
+            pointFormatter: function() {
+                let value;
+                let suffix;
+
+                if (selectedMetric === 'ag') {
+                    value = Math.round(this.y);
+                    suffix = ' %';
+                } else if (selectedMetric === 'bp') {
+                    value = this.y.toFixed(1);
+                    suffix = '';
+                }
+
+                return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${value}${suffix}</b><br/>`;
+            }
+        }
       }
     ]
   };
@@ -130,7 +146,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
       <div className="description-container">
         <h2>{selectedMetricName} för skolor i vald kommun</h2>
         <p>
-          Diagrammet visar genomsnittlig {selectedMetricName.toLowerCase()} för alla skolor i {selectedKommun} som har ett inrapporterat värde under ett specifikt år.
+          Diagrammet visar {selectedMetricName.toLowerCase()} för alla skolor i {selectedKommun} som har ett inrapporterat värde under ett specifikt år.
           Använd skjutreglaget under diagrammet för att byta år. Den skola du valt är markerad i rött.
         </p>
       </div>

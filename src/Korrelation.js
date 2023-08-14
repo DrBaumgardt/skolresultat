@@ -133,7 +133,7 @@ const Korrelation = ({ selectedKommun, selectedSkola, selectedSubject, selectedM
             align: "left"
         },
         subtitle: {
-            text: "Källa: Skolverket",
+            text: "Källa: Magnus Baumgardt",
             align: "left"
         },
         xAxis: {

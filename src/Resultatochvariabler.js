@@ -100,6 +100,10 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
             text: `${selectedMetricName} i ${selectedSubjectName.toLowerCase()} jämfört med värden för vald variabel, ${selectedSkola}, 2014-2022`,
             align: 'left'
         },
+        subtitle: {
+            text: "Källa: Skolverket",
+            align: "left"
+        },
         xAxis: [{
             categories: availableYears.map(year => `20${year}`),
             crosshair: true
@@ -124,13 +128,13 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
         }],
         series: [
             {
-                name: selectedMetric === 'bp' ? 'Betygspoäng' : 'Andel godkända',
+                name: `${selectedMetricName}`,
                 type: 'column',
                 data: chartData.betygspoäng,
                 tooltip: {
                     pointFormatter: function() {
                         const value = selectedMetric === 'bp' ? this.y : Math.round(this.y);
-                        const suffix = selectedMetric === 'bp' ? ' poäng' : ' %';
+                        const suffix = selectedMetric === 'bp' ? '' : ' %';
                         return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${value}${suffix}</b><br/>`;
                     }
                 }
@@ -146,7 +150,20 @@ const ResultatOchVariabler = ({ selectedKommun, selectedSkola, selectedSubject, 
                     enabled: true
                 },
                 tooltip: {
-                    valueSuffix: getTooltipSuffix(selectedVariable)
+                    pointFormatter: function() {
+                        let value;
+                        let suffix;
+                
+                        if (selectedVariable === 'fgu' || selectedVariable === 'n9') {
+                            value = this.y;
+                            suffix = '';
+                        } else {
+                            value = Math.round(this.y);
+                            suffix = ' %';
+                        }
+                
+                        return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${value}${suffix}</b><br/>`;
+                    }
                 }
             }
         ]

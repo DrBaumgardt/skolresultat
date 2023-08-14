@@ -104,9 +104,9 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
   return (
     <div className="chart-container">
       <div className="description-container">
-        <h2>Genomsnittlig {selectedMetricName.toLowerCase()} över tid</h2>
+        <h2>{selectedMetricName} över tid</h2>
         <p>
-          Diagrammet visar genomsnittlig {selectedMetricName.toLowerCase()} för den valda skolan
+          Diagrammet visar {selectedMetricName.toLowerCase()} för den valda skolan
           över tid. För jämförelse visas även det genomsnittlig {selectedMetricName.toLowerCase()}
           för alla skolor i den valda kommunen, samt genomsnittlig {selectedMetricName.toLowerCase()}
           för skolor i hela Sverige under samma tidsperiod. Notera att eventuella tomma punkter i diagrammet för den valda skolan

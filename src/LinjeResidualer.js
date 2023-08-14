@@ -45,7 +45,7 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
       align: "left"
     },
     subtitle: {
-      text: "Källa: Skolverket",
+      text: "Källa: Magnus Baumgardt",
       align: "left"
     },
     yAxis: {
@@ -67,10 +67,8 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
       }
     },
     legend: {
-      layout: "vertical",
-      align: "right",
-      verticalAlign: "middle"
-    },
+      enabled: false
+  },
     plotOptions: {
       series: {
         label: {
@@ -80,12 +78,12 @@ const LinjeResidualer = ({ selectedKommun, selectedSkola, selectedSubject, selec
       }
     },
     series: [{
-      name: `${selectedSkola} Residualer`,
+      name: `Residual ${selectedMetricName.toLowerCase()}`,
       data: chartData.length > 0 ? chartData[0].data : [],
       lineWidth: 2,
       tooltip: {
         pointFormatter: function() {
-          return '<span style="color:' + this.series.color + '">\u25CF</span> ' + this.series.name + ': <b>' + this.y.toFixed(1) + '</b><br/>';
+          return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${this.y.toFixed(1)}</b><br/>`;
         }
       },
       dataLabels: {

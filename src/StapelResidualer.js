@@ -117,7 +117,7 @@ const StapelResidualer = ({ selectedKommun, selectedSkola, selectedSubject, sele
             align: "left"
         },
         subtitle: {
-            text: "Källa: Skolverket",
+            text: "Källa: Magnus Baumgardt",
             align: "left"
         },
         xAxis: {
@@ -146,16 +146,13 @@ const StapelResidualer = ({ selectedKommun, selectedSkola, selectedSubject, sele
             }
         },
         tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
+            pointFormatter: function() {
+                return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${this.y.toFixed(1)}</b><br/>`;
+            }
         },
         series: [
             {
-                name: "Betygspoäng",
+                name: `Residual ${selectedMetricName.toLowerCase()}`,
                 data: chartData
             }
         ]
