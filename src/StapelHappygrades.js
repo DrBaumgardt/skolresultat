@@ -147,7 +147,7 @@ const StapelHappygrades = ({
       align: "left",
     },
     subtitle: {
-      text: "Källa: Magnus Baumgardt",
+      text: "Källa: Skolverket",
       align: "left",
     },
     xAxis: {

@@ -105,7 +105,7 @@ const LinjeHappygrades = ({
       align: "left",
     },
     subtitle: {
-      text: "Källa: Magnus Baumgardt",
+      text: "Källa: Skolverket",
       align: "left",
     },
     yAxis: {
