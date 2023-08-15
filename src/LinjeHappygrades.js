@@ -174,8 +174,8 @@ const LinjeHappygrades = ({
           {selectedMetricName.toLowerCase()} på NP. Ett <b>positivt</b> värde
           betyder att skolan senare sätter ett högre betyg än provbetyget på NP.
           Som jämförelse visas genomsnittet för kommunen och hela Sverige. Vid
-          betygsättning ska resultatet på NP särksilt beaktas och ett högre
-          resultat kan alltså betyda att skolan bidrar till betygsinflation.
+          betygsättning ska resultatet på NP särskilt beaktas och ett högre
+          värde kan alltså betyda att skolan bidrar till betygsinflation.
         </p>
       </div>
       <HighchartsReact
