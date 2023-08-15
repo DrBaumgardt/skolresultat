@@ -14,7 +14,7 @@ const Header = ({
   selectedMetric,
   setSelectedMetric,
   selectedMetricName,
-  setSelectedMetricName
+  setSelectedMetricName,
 }) => {
   const [kommuner, setKommuner] = useState([]);
   const [skolor, setSkolor] = useState([]);
@@ -77,82 +77,84 @@ const Header = ({
 
   return (
     <div className="header-container">
+      <div className="header-inner">
+        <div className="logo-container">
+          <img src="/logo2.png" alt="Logo" />
+        </div>
 
-      <div className="logo-container">
-        <img src="/logo2.png" alt="Logo" />
-      </div>
+        <div style={{ flexGrow: 1 }}></div>
 
-      <div className="selection-container">
+        <div className="selection-container">
+          <select value={selectedKommun} onChange={handleKommunChange}>
+            {kommuner.map((kommun) => (
+              <option key={kommun} value={kommun}>
+                {kommun}
+              </option>
+            ))}
+          </select>
 
-        <select value={selectedKommun} onChange={handleKommunChange}>
-          {kommuner.map((kommun) => (
-            <option key={kommun} value={kommun}>
-              {kommun}
-            </option>
-          ))}
-        </select>
+          <select value={selectedSkola} onChange={handleSkolaChange}>
+            {skolor.map((skola) => (
+              <option key={skola} value={skola}>
+                {skola}
+              </option>
+            ))}
+          </select>
 
-        <select value={selectedSkola} onChange={handleSkolaChange}>
-          {skolor.map((skola) => (
-            <option key={skola} value={skola}>
-              {skola}
-            </option>
-          ))}
-        </select>
+          <select value={selectedCategory} onChange={handleCategoryChange}>
+            <option value="Meritvärden">Meritvärden</option>
+            <option value="Betyg">Betyg</option>
+            <option value="NP">NP</option>
+          </select>
 
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-          <option value="Meritvärden">Meritvärden</option>
-          <option value="Betyg">Betyg</option>
-          <option value="NP">NP</option>
-        </select>
-
-        {selectedCategory === "NP" && (
-          <>
-            <select value={selectedSubject} onChange={handleSubjectChange}>
-              <option key="Matematik" value="ma">
-                Matematik
-              </option>
-              <option key="Engelska" value="en">
-                Engelska
-              </option>
-              <option key="Svenska" value="sv">
-                Svenska
-              </option>
-              <option key="Svenska som andraspråk" value="sva">
-                Svenska som andraspråk
-              </option>
-              <option key="Biologi" value="bi">
-                Biologi
-              </option>
-              <option key="Fysik" value="fy">
-                Fysik
-              </option>
-              <option key="Kemi" value="ke">
-                Kemi
-              </option>
-              <option key="Geografi" value="ge">
-                Geografi
-              </option>
-              <option key="Historia" value="hi">
-                Historia
-              </option>
-              <option key="Religionskunskap" value="re">
-                Religionskunskap
-              </option>
-              <option key="Samhällskunskap" value="sh">
-                Samhällskunskap
-              </option>
-            </select>
-            <select value={selectedMetric} onChange={handleMetricChange}>
-              <option key="Betygspoäng" value="bp">
-                Betygspoäng
-              </option>
-              <option key="Andel godkända" value="ag">
-                Andel godkända
-              </option>
-            </select>
-          </>
-        )}
+          {selectedCategory === "NP" && (
+            <>
+              <select value={selectedSubject} onChange={handleSubjectChange}>
+                <option key="Matematik" value="ma">
+                  Matematik
+                </option>
+                <option key="Engelska" value="en">
+                  Engelska
+                </option>
+                <option key="Svenska" value="sv">
+                  Svenska
+                </option>
+                <option key="Svenska som andraspråk" value="sva">
+                  Svenska som andraspråk
+                </option>
+                <option key="Biologi" value="bi">
+                  Biologi
+                </option>
+                <option key="Fysik" value="fy">
+                  Fysik
+                </option>
+                <option key="Kemi" value="ke">
+                  Kemi
+                </option>
+                <option key="Geografi" value="ge">
+                  Geografi
+                </option>
+                <option key="Historia" value="hi">
+                  Historia
+                </option>
+                <option key="Religionskunskap" value="re">
+                  Religionskunskap
+                </option>
+                <option key="Samhällskunskap" value="sh">
+                  Samhällskunskap
+                </option>
+              </select>
+              <select value={selectedMetric} onChange={handleMetricChange}>
+                <option key="Betygspoäng" value="bp">
+                  Betygspoäng
+                </option>
+                <option key="Andel godkända" value="ag">
+                  Andel godkända
+                </option>
+              </select>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

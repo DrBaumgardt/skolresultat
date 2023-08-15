@@ -7,6 +7,8 @@ import Resultatochvariabler from "./Resultatochvariabler";
 import PredBP from "./PredBP";
 import LinjeResidualer from "./LinjeResidualer";
 import StapelResidualer from "./StapelResidualer";
+import LinjeHappygrades from "./LinjeHappygrades";
+import StapelHappygrades from "./StapelHappygrades";
 import Footer from "./Footer";
 import "./styles.css";
 
@@ -18,10 +20,11 @@ export default function App() {
   const [selectedSubjectName, setSelectedSubjectName] = useState("Matematik");
   const [selectedMetric, setSelectedMetric] = useState("bp");
   const [selectedMetricName, setSelectedMetricName] = useState("Betygspoäng");
-  
 
   useEffect(() => {
-    const initialSubjectName = document.querySelector(`option[value="${selectedSubject}"]`)?.textContent;
+    const initialSubjectName = document.querySelector(
+      `option[value="${selectedSubject}"]`
+    )?.textContent;
     if (initialSubjectName) {
       setSelectedSubjectName(initialSubjectName);
     }
@@ -47,6 +50,10 @@ export default function App() {
       />
 
       <div className="content-container">
+        <div className="h1-container">
+          <h1>Resultat</h1>
+        </div>
+
         <Linjediagram
           selectedKommun={selectedKommun}
           selectedSkola={selectedSkola}
@@ -63,6 +70,9 @@ export default function App() {
           selectedMetric={selectedMetric}
           selectedMetricName={selectedMetricName}
         />
+        <div className="h1-container">
+          <h1>Korrelationsanalys</h1>
+        </div>
         <Korrelation
           selectedKommun={selectedKommun}
           selectedSkola={selectedSkola}
@@ -79,6 +89,9 @@ export default function App() {
           selectedMetric={selectedMetric}
           selectedMetricName={selectedMetricName}
         />
+        <div className="h1-container">
+          <h1>Regressionsanalys</h1>
+        </div>
         <PredBP
           selectedKommun={selectedKommun}
           selectedSkola={selectedSkola}
@@ -96,6 +109,25 @@ export default function App() {
           selectedMetricName={selectedMetricName}
         />
         <StapelResidualer
+          selectedKommun={selectedKommun}
+          selectedSkola={selectedSkola}
+          selectedSubject={selectedSubject}
+          selectedSubjectName={selectedSubjectName}
+          selectedMetric={selectedMetric}
+          selectedMetricName={selectedMetricName}
+        />
+        <div className="h1-container">
+          <h1>Betygsinflation</h1>
+        </div>
+        <LinjeHappygrades
+          selectedKommun={selectedKommun}
+          selectedSkola={selectedSkola}
+          selectedSubject={selectedSubject}
+          selectedSubjectName={selectedSubjectName}
+          selectedMetric={selectedMetric}
+          selectedMetricName={selectedMetricName}
+        />
+        <StapelHappygrades
           selectedKommun={selectedKommun}
           selectedSkola={selectedSkola}
           selectedSubject={selectedSubject}

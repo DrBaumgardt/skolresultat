@@ -6,17 +6,18 @@ import Highcharts from "highcharts";
 Highcharts.setOptions({
   title: {
     style: {
-      fontFamily: "Helvetica",
+      fontFamily: "Roboto",
+      color: "#666666",
       fontSize: "18px",
-      fontWeight: "bold"
-    }
+      fontWeight: "bold",
+    },
   },
   subtitle: {
     style: {
       fontFamily: "Verdana",
-      fontSize: "12px"
-    }
-  }
+      fontSize: "12px",
+    },
+  },
 });
 
 Highcharts.setOptions({
@@ -24,18 +25,18 @@ Highcharts.setOptions({
     rules: [
       {
         condition: {
-          maxWidth: 500
+          maxWidth: 500,
         },
         chartOptions: {
           legend: {
             layout: "horizontal",
             align: "center",
-            verticalAlign: "bottom"
-          }
-        }
-      }
-    ]
-  }
+            verticalAlign: "bottom",
+          },
+        },
+      },
+    ],
+  },
 });
 
 const rootElement = document.getElementById("root");

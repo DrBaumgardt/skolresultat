@@ -25,16 +25,25 @@
   justify-content: center;         /* Centrera innehållet i header-container */
   width: 100%;
   text-align: left;
-  background-color: #E63A44;
+  background-color: #A63C45;
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 20px;
+  padding: 10px;
   vertical-align: middle;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
 }
 
 .logo-container {
   color: white;
+  margin-left: 20px;
   margin-right: 50px;
   font-family: Arial, sans-serif;
   font-weight: bold;
@@ -50,10 +59,20 @@
 .selection-container {
   display: flex;
   gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.h1-container {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: left;
 }
 
 h1 {
-  font-size: 40px; 
+  font-size: 40px;
 }
 
 h2 {
@@ -63,7 +82,7 @@ p {
 }
 
 .description-container {
-  margin-top: 30px;
+  margin-top: 0px;
   margin-bottom: 30px;
 }
 
@@ -72,7 +91,7 @@ p {
 }
 
 .chart-container {
-  margin-top: 20px; /* Eller den önskade marginalen */
+  margin-top: 0px; /* Eller den önskade marginalen */
   width: 100%; /* Tar upp hela bredden inom föräldern */
   max-width: 1000px; /* Eller någon annan önskad maxbredd */
   margin-bottom: 70px;

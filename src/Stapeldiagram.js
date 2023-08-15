@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
+const Stapeldiagram = ({
+  selectedKommun,
+  selectedSkola,
+  selectedSubject,
+  selectedSubjectName,
+  selectedMetric,
+  selectedMetricName,
+}) => {
   const [chartData, setChartData] = useState([]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
   const [availableYears, setAvailableYears] = useState([]);
@@ -58,14 +65,18 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
           const kommunData = data.filter(
             (item) =>
               item.kom === selectedKommun &&
-              item[`${selectedMetric}_np_${selectedSubject}_${actualYear}`] != null
+              item[`${selectedMetric}_np_${selectedSubject}_${actualYear}`] !=
+                null
           );
 
           const betygValues = kommunData
             .map((skola) => ({
               name: skola.skola,
-              y: skola[`${selectedMetric}_np_${selectedSubject}_${actualYear}`] ?? null,
-              color: skola.skola === selectedSkola ? "#D93B48" : "#2CAFFE"
+              y:
+                skola[
+                  `${selectedMetric}_np_${selectedSubject}_${actualYear}`
+                ] ?? null,
+              color: skola.skola === selectedSkola ? "#D93B48" : "#2CAFFE",
             }))
             .sort((a, b) => b.y - a.y)
             .map((item, index) => ({ ...item, id: `id_${index}` })); // Assign new id based on sorted order
@@ -83,7 +94,7 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
     selectedYearIndex,
     availableYears,
     actualYear,
-    selectedMetric
+    selectedMetric,
   ]);
 
   const chartHeight =
@@ -92,53 +103,53 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
   const chartOptions = {
     chart: {
       type: "bar",
-      height: chartHeight
+      height: chartHeight,
     },
     title: {
       text: `${selectedMetricName} för NP i ${selectedSubjectName.toLowerCase()} för skolor i ${selectedKommun}, ${
         2000 + actualYear
       }`,
-      align: "left"
+      align: "left",
     },
     subtitle: {
       text: "Källa: Skolverket",
-      align: "left"
+      align: "left",
     },
     xAxis: {
-      type: "category"
+      type: "category",
     },
     yAxis: {
       title: {
-        text: ""
-      }
+        text: "",
+      },
     },
     legend: {
       enabled: false,
       align: "left",
-      verticalAlign: "top"
+      verticalAlign: "top",
     },
     series: [
       {
-        name: selectedMetric === 'bp' ? 'Betygspoäng' : 'Andel godkända',
+        name: selectedMetric === "bp" ? "Betygspoäng" : "Andel godkända",
         data: chartData,
         tooltip: {
-            pointFormatter: function() {
-                let value;
-                let suffix;
+          pointFormatter: function () {
+            let value;
+            let suffix;
 
-                if (selectedMetric === 'ag') {
-                    value = Math.round(this.y);
-                    suffix = ' %';
-                } else if (selectedMetric === 'bp') {
-                    value = this.y.toFixed(1);
-                    suffix = '';
-                }
-
-                return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${value}${suffix}</b><br/>`;
+            if (selectedMetric === "ag") {
+              value = Math.round(this.y);
+              suffix = " %";
+            } else if (selectedMetric === "bp") {
+              value = this.y.toFixed(1);
+              suffix = "";
             }
-        }
-      }
-    ]
+
+            return `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${value}${suffix}</b><br/>`;
+          },
+        },
+      },
+    ],
   };
 
   return (
@@ -146,8 +157,10 @@ const Stapeldiagram = ({ selectedKommun, selectedSkola, selectedSubject, selecte
       <div className="description-container">
         <h2>{selectedMetricName} för skolor i vald kommun</h2>
         <p>
-          Diagrammet visar {selectedMetricName.toLowerCase()} för alla skolor i {selectedKommun} som har ett inrapporterat värde under ett specifikt år.
-          Använd skjutreglaget under diagrammet för att byta år. Den skola du valt är markerad i rött.
+          Diagrammet visar {selectedMetricName.toLowerCase()} för alla skolor i{" "}
+          {selectedKommun} som har ett inrapporterat värde under ett specifikt
+          år. Använd skjutreglaget under diagrammet för att byta år. Vald skola
+          är markerad med röd färg.
         </p>
       </div>
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />
