@@ -56,9 +56,13 @@ const LinjeHappygrades = ({
                   school[`${selectedMetric}_np_${selectedSubject}_${year}`];
                 const maVal =
                   maSchool[`${selectedMetric}_${selectedSubject}_${year}`];
-                return maVal - npVal;
+                if (npVal != null && npVal !== 0) {
+                  return maVal - npVal;
+                }
+                return null;
               })
               .filter((val) => val !== null);
+
             const kommunAverageDifference =
               kommunDifferencesForYear.reduce((acc, curr) => acc + curr, 0) /
               kommunDifferencesForYear.length;
@@ -73,9 +77,13 @@ const LinjeHappygrades = ({
                   school[`${selectedMetric}_np_${selectedSubject}_${year}`];
                 const maVal =
                   maSchool[`${selectedMetric}_${selectedSubject}_${year}`];
-                return maVal - npVal;
+                if (npVal != null && npVal !== 0) {
+                  return maVal - npVal;
+                }
+                return null;
               })
               .filter((val) => val !== null);
+
             const sverigeAverageDifference =
               sverigeDifferencesForYear.reduce((acc, curr) => acc + curr, 0) /
               sverigeDifferencesForYear.length;
