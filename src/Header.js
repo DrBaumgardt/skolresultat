@@ -53,6 +53,14 @@ const Header = ({
     }
   }, [selectedKommun, jsonData, setSelectedSkola]);
 
+  useEffect(() => {
+    if (selectedCategory === "NP") {
+      setSelectedSubject("npma");
+    } else if (selectedCategory === "Betyg") {
+      setSelectedSubject("ma");
+    }
+  }, [selectedCategory, setSelectedSubject]);
+
   const handleKommunChange = (e) => {
     setSelectedKommun(e.target.value);
   };
@@ -110,6 +118,54 @@ const Header = ({
           {selectedCategory === "NP" && (
             <>
               <select value={selectedSubject} onChange={handleSubjectChange}>
+                <option key="Matematik" value="npma">
+                  Matematik
+                </option>
+                <option key="Engelska" value="npen">
+                  Engelska
+                </option>
+                <option key="Svenska" value="npsv">
+                  Svenska
+                </option>
+                <option key="Svenska som andraspråk" value="npsva">
+                  Svenska som andraspråk
+                </option>
+                <option key="Biologi" value="npbi">
+                  Biologi
+                </option>
+                <option key="Fysik" value="npfy">
+                  Fysik
+                </option>
+                <option key="Kemi" value="npke">
+                  Kemi
+                </option>
+                <option key="Geografi" value="npge">
+                  Geografi
+                </option>
+                <option key="Historia" value="nphi">
+                  Historia
+                </option>
+                <option key="Religionskunskap" value="npre">
+                  Religionskunskap
+                </option>
+                <option key="Samhällskunskap" value="npsh">
+                  Samhällskunskap
+                </option>
+              </select>
+              <select value={selectedMetric} onChange={handleMetricChange}>
+                <option key="Betygspoäng" value="npbp">
+                  Betygspoäng
+                </option>
+                <option key="Andel godkända" value="npag">
+                  Andel godkända
+                </option>
+              </select>
+            </>
+          )}
+
+          {selectedCategory === "Betyg" && (
+            <>
+              <select value={selectedSubject} onChange={handleSubjectChange}>
                 <option key="Matematik" value="ma">
                   Matematik
                 </option>
@@ -142,6 +198,33 @@ const Header = ({
                 </option>
                 <option key="Samhällskunskap" value="sh">
                   Samhällskunskap
+                </option>
+                <option key="Bild" value="bi">
+                  Bild
+                </option>
+                <option key="Hem- och konsumentkunskap" value="hkk">
+                  Hem- och konsumentkunskap
+                </option>
+                <option key="Idrott och hälsa" value="idh">
+                  Idrott och hälsa
+                </option>
+                <option key="Musik" value="mu">
+                  Musik
+                </option>
+                <option key="Slöjd" value="sl">
+                  Bild
+                </option>
+                <option key="Teknik" value="tk">
+                  Bild
+                </option>
+                <option key="Moderna språk elevens val" value="m1">
+                  Moderna språk elevens val
+                </option>
+                <option key="Moderna språk språkval" value="m2">
+                  Moderna språk språkval
+                </option>
+                <option key="Modersmål" value="ml">
+                  Modersmål
                 </option>
               </select>
               <select value={selectedMetric} onChange={handleMetricChange}>

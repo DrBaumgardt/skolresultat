@@ -57,6 +57,7 @@ export default function App() {
         <Linjediagram
           selectedKommun={selectedKommun}
           selectedSkola={selectedSkola}
+          selectedCategory={selectedCategory}
           selectedSubject={selectedSubject}
           selectedSubjectName={selectedSubjectName}
           selectedMetric={selectedMetric}

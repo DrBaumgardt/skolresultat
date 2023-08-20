@@ -2,7 +2,15 @@ import React, { useEffect, useState, useCallback } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selectedSubjectName, selectedMetric, selectedMetricName }) => {
+const Linjediagram = ({
+  selectedKommun,
+  selectedSkola,
+  selectedCategory,
+  selectedSubject,
+  selectedSubjectName,
+  selectedMetric,
+  selectedMetricName,
+}) => {
   const [chartData, setChartData] = useState([]);
   const [chartCategories, setChartCategories] = useState([]);
 
@@ -13,7 +21,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
         : data;
 
       const validValues = filteredData
-        .map((item) => item[`${selectedMetric}_np_${selectedSubject}_${year}`])
+        .map((item) => item[`${selectedMetric}_${selectedSubject}_${year}`])
         .filter((value) => value != null);
       const totalValue = validValues.reduce((sum, value) => sum + value, 0);
       const averageValue = totalValue / validValues.length;
@@ -24,10 +32,17 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
   );
 
   useEffect(() => {
+    console.log("Use effect triggered with:", {
+      selectedKommun,
+      selectedSkola,
+      selectedSubject,
+      selectedMetric,
+    });
+
     setChartData([]);
     setChartCategories([]);
     if (selectedKommun && selectedSkola && selectedSubject) {
-      fetch(`/assets/np_${selectedSubject}_reg.json`)
+      fetch(`/assets/${selectedSubject}_reg.json`)
         .then((response) => response.json())
         .then((data) => {
           const schoolData = data.find(
@@ -41,7 +56,8 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
           const categories = [];
 
           for (let year = 14; year <= 22; year++) {
-            const skolaNPValue = schoolData[`${selectedMetric}_np_${selectedSubject}_${year}`];
+            const skolaNPValue =
+              schoolData[`${selectedMetric}_${selectedSubject}_${year}`];
             const kommunNPValue = getAverageNPValue(data, selectedKommun, year);
             const swedenNPValue = getAverageNPValue(data, null, year);
 
@@ -54,7 +70,7 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
           setChartData([
             { name: selectedSkola, data: skolaNPValues },
             { name: `${selectedKommun} genomsnitt`, data: kommunNPValues },
-            { name: "Sverige genomsnitt", data: swedenNPValues }
+            { name: "Sverige genomsnitt", data: swedenNPValues },
           ]);
           setChartCategories(categories);
         })
@@ -62,43 +78,50 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
           console.error("Error loading file:", error);
         });
     }
-  }, [selectedKommun, selectedSkola, selectedSubject, selectedMetric, getAverageNPValue]);
+  }, [
+    selectedKommun,
+    selectedSkola,
+    selectedCategory,
+    selectedSubject,
+    selectedMetric,
+    getAverageNPValue,
+  ]);
 
   const chartOptions = {
     title: {
       text: `Genomsnittlig ${selectedMetricName.toLowerCase()} för NP i ${selectedSubjectName.toLowerCase()} för ${selectedSkola}, ${selectedKommun}, 2014-2022`,
-      align: "left"
+      align: "left",
     },
     subtitle: {
       text: "Källa: Skolverket",
-      align: "left"
+      align: "left",
     },
     yAxis: {
       title: {
-        text: `Genomsnittlig ${selectedMetricName.toLowerCase()}`
-      }
+        text: `Genomsnittlig ${selectedMetricName.toLowerCase()}`,
+      },
     },
     xAxis: {
       categories: chartCategories,
       accessibility: {
-        rangeDescription: "Range: 2014 to 2022"
-      }
+        rangeDescription: "Range: 2014 to 2022",
+      },
     },
     legend: {
       layout: "vertical",
       align: "right",
-      verticalAlign: "middle"
+      verticalAlign: "middle",
     },
     plotOptions: {
       series: {
         label: {
-          connectorAllowed: false
+          connectorAllowed: false,
         },
         lineWidth: 2,
-        connectNulls: true // Connects lines even if data points are missing
-      }
+        connectNulls: true, // Connects lines even if data points are missing
+      },
     },
-    series: chartData
+    series: chartData,
   };
 
   return (
@@ -106,17 +129,20 @@ const Linjediagram = ({ selectedKommun, selectedSkola, selectedSubject, selected
       <div className="description-container">
         <h2>{selectedMetricName} över tid</h2>
         <p>
-          Diagrammet visar {selectedMetricName.toLowerCase()} för den valda skolan
-          över tid. För jämförelse visas även det genomsnittlig {selectedMetricName.toLowerCase()}
-          för alla skolor i den valda kommunen, samt genomsnittlig {selectedMetricName.toLowerCase()}
-          för skolor i hela Sverige under samma tidsperiod. Notera att eventuella tomma punkter i diagrammet för den valda skolan
-          indikerar år då data saknas.
+          Diagrammet visar {selectedMetricName.toLowerCase()} för den valda
+          skolan över tid. För jämförelse visas även det genomsnittlig{" "}
+          {selectedMetricName.toLowerCase()}
+          för alla skolor i den valda kommunen, samt genomsnittlig{" "}
+          {selectedMetricName.toLowerCase()}
+          för skolor i hela Sverige under samma tidsperiod. Notera att
+          eventuella tomma punkter i diagrammet för den valda skolan indikerar
+          år då data saknas.
         </p>
       </div>
       <HighchartsReact
         highcharts={Highcharts}
         options={chartOptions}
-        key={`${selectedSkola}-${selectedKommun}-${selectedSubject}-${selectedMetric}`}
+        key={`${selectedSkola}-${selectedKommun}-${selectedCategory}-${selectedSubject}-${selectedMetric}`}
       />
     </div>
   );
